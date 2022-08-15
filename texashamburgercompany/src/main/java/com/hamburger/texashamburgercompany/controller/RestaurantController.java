@@ -43,7 +43,7 @@ public class RestaurantController {
 	}
 
 	@DeleteMapping("deleteRestaurant/{id}")
-	public void deleteRestaurantById(@PathVariable("id") Long id) {
+	public Long deleteRestaurantById(@PathVariable("id") Long id) {
 
 		Optional<RestaurantLocations> opt = repository.findById(id);
 
@@ -52,6 +52,8 @@ public class RestaurantController {
 		}
 		RestaurantLocations restaurantLocation = opt.get();
 		repository.delete(restaurantLocation);
+		
+		return id;
 	}
 
 }
