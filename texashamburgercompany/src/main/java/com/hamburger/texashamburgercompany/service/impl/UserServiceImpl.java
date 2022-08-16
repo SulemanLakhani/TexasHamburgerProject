@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.hamburger.texashamburgercompany.model.Users;
@@ -62,6 +63,11 @@ public class UserServiceImpl implements UserService {
 			throw e;
 		}
 		return deletedUsers;
+	}
+
+	@Override
+	public List<Users> getUsersWithSorting(String field) {
+		return usersRepository.findAll(Sort.by(Sort.Direction.ASC,field));
 	}
 
 }

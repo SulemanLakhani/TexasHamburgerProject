@@ -1,59 +1,97 @@
 package com.hamburger.texashamburgercompany.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.hamburger.texashamburgercompany.model.RestaurantLocations;
-import com.hamburger.texashamburgercompany.repository.RestaurantLocationsRepository;
+import com.hamburger.texashamburgercompany.service.RestaurantLocationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 public class RestaurantController {
-
 	@Autowired
-	private RestaurantLocationsRepository repository;
+	private RestaurantLocationService restService;
+
+	Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
 	@GetMapping("/restaurants")
 	public List<RestaurantLocations> getAllRestaurantLocations() {
-		return repository.findAll();
+
+		List<RestaurantLocations> restaurantLocations = null;
+			try{
+				restaurantLocations = restService.getAllLocations();
+			} catch(Exception e) {
+				e.getMessage();
+				e.printStackTrace();
+			}
+		logger.error("API called with response: " + restaurantLocations);
+
+		return restaurantLocations;
 	}
 
 	@PostMapping("/addRestaurant")
 	public RestaurantLocations addRestaurant(@RequestBody RestaurantLocations restaurantLocation) {
-		return repository.save(restaurantLocation);
+		RestaurantLocations restaurantLocations = null;
+		try {
+			restaurantLocations = restService.addOrUpdateLocation(restaurantLocation);
+		} catch(Exception e){
+			e.getMessage();
+			e.printStackTrace();
+		}
+
+		logger.error("Restaurant Added: " + restaurantLocations);
+		return restaurantLocations;
 	}
 
 	@GetMapping("/restaurants/{id}")
 	public RestaurantLocations getRestaurantLocationsById(@PathVariable("id") Long id) {
-		Optional<RestaurantLocations> opt = repository.findById(id);
-
-		if (opt.isEmpty()) {
-			throw new RuntimeException("Id is not Valid");
+		RestaurantLocations restaurantLocations = null;
+		try {
+			restaurantLocations = restService.getRestaurantById(id);
+		} catch(Exception e){
+			e.getMessage();
+			e.printStackTrace();
 		}
-		RestaurantLocations restaurantLocation = opt.get();
 
-		return restaurantLocation;
+		logger.error("Restaurant Location By Id: " + restaurantLocations);
+		return restaurantLocations;
 	}
 
 	@DeleteMapping("deleteRestaurant/{id}")
-	public Long deleteRestaurantById(@PathVariable("id") Long id) {
+	public RestaurantLocations deleteRestaurantById(@PathVariable("id") Long id) {
 
-		Optional<RestaurantLocations> opt = repository.findById(id);
-
-		if (opt.isEmpty()) {
-			throw new RuntimeException("Id is not Valid");
+		RestaurantLocations restaurantLocations = null;
+		try {
+			restaurantLocations = restService.deleteLocation(id);
+		} catch(Exception e){
+			e.getMessage();
+			e.printStackTrace();
 		}
-		RestaurantLocations restaurantLocation = opt.get();
-		repository.delete(restaurantLocation);
-		
-		return id;
+
+		logger.error("Restaurant deleted: " + restaurantLocations);
+		return restaurantLocations;
 	}
 
+	@GetMapping("/restaurantsWithSorting/{field}")
+	public List<RestaurantLocations> getRestaurantsWithSorting(@PathVariable("field") String field){
+		List<RestaurantLocations> restaurantLocations = null;
+		try{
+			restaurantLocations = restService.getRestaurantsWithSorting(field);
+		} catch(Exception e) {
+			e.getMessage();
+			e.printStackTrace();
+		}
+		logger.error("API called with response: " + restaurantLocations);
+
+		return restaurantLocations;
+	}
+
+	@GetMapping("restaurantsWithPagination/{offset}/{pageSize}")
+	public Page<RestaurantLocations> restaurantsWithPagination(@PathVariable int offset, @PathVariable int pageSize){
+		Page<RestaurantLocations> restaurantLocationsWithPagination = restService.getRestaurantsWithPagination(offset,pageSize);
+		return restaurantLocationsWithPagination;
+	}
 }

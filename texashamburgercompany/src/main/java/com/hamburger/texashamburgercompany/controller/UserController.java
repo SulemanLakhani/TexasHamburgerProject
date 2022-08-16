@@ -1,8 +1,9 @@
 package com.hamburger.texashamburgercompany.controller;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,18 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.hamburger.texashamburgercompany.model.Users;
-import com.hamburger.texashamburgercompany.repository.UsersRepository;
 import com.hamburger.texashamburgercompany.service.UserService;
 
 @RestController
 //@RequestMapping("/api")
 public class UserController {
+	Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
 	@Autowired
 	private UserService userService;
-
-	@Autowired
-	private UsersRepository repository;
 
 	@GetMapping("/users")
 	public List<Users> getAllUsers() {
@@ -33,27 +31,57 @@ public class UserController {
 	@GetMapping("/users/{id}")
 	public Users getUserById(@PathVariable("id") Long id) {
 
-		Users user = userService.getUserById(id);
+		Users user = null;
+		try {
+			user = userService.getUserById(id);
+		} catch(Exception e){
+			e.getMessage();
+			e.printStackTrace();
+		}
+
+		logger.error("User Id: " + user);
 		return user;
 	}
 
+	@GetMapping("/usersWithSorting/{field}")
+	public List<Users> usersWithSorting(@PathVariable("field") String field){
+
+		List<Users> users = null;
+		try{
+			users = userService.getUsersWithSorting(field);
+		} catch(Exception e) {
+			e.getMessage();
+			e.printStackTrace();
+		}
+		logger.error("API called with response: " + users);
+
+		return users;
+	}
 	@PostMapping("/addOrUpdateUser")
 	public Users addUser(@RequestBody Users user) {
-		return userService.addOrUpdateUser(user);
+		Users users = null;
+		try {
+			users = userService.addOrUpdateUser(user);
+		} catch(Exception e){
+			e.getMessage();
+			e.printStackTrace();
+		}
+
+		logger.error("User Added and updated: " + users);
+		return users;
 	}
 	
 	@DeleteMapping("deleteUser/{id}")
 	public Users deleteRestaurantById(@PathVariable("id") Long id) throws Exception {
 
-		Optional<Users> opt = repository.findById(id);
-
-		if (opt.isEmpty()) {
-			throw new Exception("Id is not Valid");
+		Users users = null;
+		try {
+			users = userService.deleteUser(id);
+		} catch (Exception e) {
+			e.getMessage();
+			e.printStackTrace();
 		}
-		Users user = opt.get();
-		repository.delete(user);
-		return user;
+		logger.error("User deleted: " + users);
+		return users;
 	}
-
-
 }
