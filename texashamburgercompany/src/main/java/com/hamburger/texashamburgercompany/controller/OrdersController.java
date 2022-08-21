@@ -23,18 +23,17 @@ import com.hamburger.texashamburgercompany.repository.UsersRepository;
 
 @RestController
 public class OrdersController {
-
+	private final OrdersRepository ordersRepository;
+	private final OrderItemsRepository itemRepo;
+	private final RestaurantLocationsRepository restRepository;
+	private final UsersRepository usersRepository;
 	@Autowired
-	private OrdersRepository ordersRepository;
-
-	@Autowired
-	private OrderItemsRepository itemRepo;
-
-	@Autowired
-	private RestaurantLocationsRepository restRepository;
-
-	@Autowired
-	private UsersRepository usersRepository;
+	public OrdersController(UsersRepository usersRepository, OrdersRepository ordersRepository,OrderItemsRepository itemRepo, RestaurantLocationsRepository restRepository){
+		this.ordersRepository = ordersRepository;
+		this.itemRepo = itemRepo;
+		this.restRepository = restRepository;
+		this.usersRepository = usersRepository;
+	}
 
 	@PostMapping("/order/{itemId}/{locId}/{userId}")
 	public Orders addOrder(@RequestBody Orders orders, @PathVariable("itemId") Long itemId,

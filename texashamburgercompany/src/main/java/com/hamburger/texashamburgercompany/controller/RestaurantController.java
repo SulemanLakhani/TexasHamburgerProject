@@ -12,13 +12,20 @@ import java.util.List;
 
 @RestController
 public class RestaurantController {
-	@Autowired
-	private RestaurantLocationService restService;
 
-	Logger logger = LoggerFactory.getLogger(RestaurantController.class);
+	private final RestaurantLocationService restService;
+
+	@Autowired
+	public RestaurantController(RestaurantLocationService restService){
+		this.restService = restService;
+	}
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(RestaurantController.class);
 
 	@GetMapping("/restaurants")
 	public List<RestaurantLocations> getAllRestaurantLocations() {
+
+		LOGGER.info("Entering getAll restaurants api");
 
 		List<RestaurantLocations> restaurantLocations = null;
 			try{
@@ -27,7 +34,7 @@ public class RestaurantController {
 				e.getMessage();
 				e.printStackTrace();
 			}
-		logger.error("API called with response: " + restaurantLocations);
+		LOGGER.info("API called with response: " + restaurantLocations);
 
 		return restaurantLocations;
 	}
@@ -42,7 +49,7 @@ public class RestaurantController {
 			e.printStackTrace();
 		}
 
-		logger.error("Restaurant Added: " + restaurantLocations);
+		LOGGER.info("Restaurant Added: " + restaurantLocations);
 		return restaurantLocations;
 	}
 
@@ -56,7 +63,7 @@ public class RestaurantController {
 			e.printStackTrace();
 		}
 
-		logger.error("Restaurant Location By Id: " + restaurantLocations);
+		LOGGER.info("Restaurant Location By Id: " + restaurantLocations);
 		return restaurantLocations;
 	}
 
@@ -71,7 +78,7 @@ public class RestaurantController {
 			e.printStackTrace();
 		}
 
-		logger.error("Restaurant deleted: " + restaurantLocations);
+		LOGGER.info("Restaurant deleted: " + restaurantLocations);
 		return restaurantLocations;
 	}
 
@@ -84,7 +91,7 @@ public class RestaurantController {
 			e.getMessage();
 			e.printStackTrace();
 		}
-		logger.error("API called with response: " + restaurantLocations);
+		LOGGER.info("API called with response: " + restaurantLocations);
 
 		return restaurantLocations;
 	}

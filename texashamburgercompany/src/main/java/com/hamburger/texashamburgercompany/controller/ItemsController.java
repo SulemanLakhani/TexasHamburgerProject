@@ -16,10 +16,15 @@ import com.hamburger.texashamburgercompany.repository.OrderItemsRepository;
 
 @RestController
 public class ItemsController {
-	
+
+	private final OrderItemsRepository itemRepository;
+
 	@Autowired
-	private OrderItemsRepository itemRepository;
-	
+	public ItemsController(OrderItemsRepository itemRepository) {
+		this.itemRepository = itemRepository;
+	}
+
+
 	@PostMapping("/addOrUpdateItem")
 	public Items addItems(@RequestBody Items item) {
 		return itemRepository.save(item);

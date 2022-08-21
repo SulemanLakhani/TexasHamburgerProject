@@ -20,8 +20,12 @@ import com.hamburger.texashamburgercompany.service.UserService;
 public class UserController {
 	Logger logger = LoggerFactory.getLogger(RestaurantController.class);
 
+	private final UserService userService;
+
 	@Autowired
-	private UserService userService;
+	public UserController(UserService userService){
+		this.userService = userService;
+	}
 
 	@GetMapping("/users")
 	public List<Users> getAllUsers() {
@@ -72,7 +76,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("deleteUser/{id}")
-	public Users deleteRestaurantById(@PathVariable("id") Long id) throws Exception {
+	public Users deleteRestaurantById(@PathVariable("id") Long id){
 
 		Users users = null;
 		try {
