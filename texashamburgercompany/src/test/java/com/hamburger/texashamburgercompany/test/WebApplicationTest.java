@@ -14,7 +14,7 @@ public class WebApplicationTest {
     private RestaurantController restaurantController;
 
     @Test
-    public void contextLoads() throws Exception{
+    public void contextLoads() {
         assertThat(restaurantController).isNotNull();
 
     }
