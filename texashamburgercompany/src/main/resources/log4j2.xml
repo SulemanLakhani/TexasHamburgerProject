@@ -19,14 +19,14 @@
         </Console>
     </Appenders>
     <Loggers>
-        <!--        <Logger name="com.hamburger.texashamburgercompany" level="trace"
-                        additivity="false">
-                    <AppenderRef ref="Console" />
-                </Logger>
-                <Logger name="com.hamburger.texashamburgercompany" level="trace" additivity="false">
-                    <AppenderRef ref="RollingFile" />
-                </Logger>-->
-        <Root level="info">
+        <Logger name="com.hamburger.texashamburgercompany" level="trace" additivity="false">
+            <AppenderRef ref="Console" />
+        </Logger>
+        <Logger name="com.hamburger.texashamburgercompany" level="trace" additivity="false">
+            <AppenderRef ref="RollingFile" />
+        </Logger>
+
+        <Root level="trace">
             <AppenderRef ref="Console" />
             <AppenderRef ref="RollingFile" />
         </Root>
